@@ -16,10 +16,10 @@ jobs:
 
     steps:
     - name: 1. 조장님의 코드 가져오기
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 2. AWS에 OIDC(임시 출입증)로 안전하게 로그인!
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         # 🚨 아까 테라폼(cicd.tf)으로 만들었던 그 완장(Role) 주소입니다!
         role-to-assume: arn:aws:iam::964993353199:role/github-actions-role
@@ -27,7 +27,7 @@ jobs:
 
     - name: 3. AWS ECR(물류창고)에 로그인
       id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      uses: aws-actions/amazon-ecr-login@v2
 
     - name: 4. Docker 이미지 포장(Build)하고 창고에 넣기(Push)
       env:
