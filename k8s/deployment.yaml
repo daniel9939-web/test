@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: score-app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: score-app
+  template:
+    metadata:
+      labels:
+        app: score-app
+    spec:
+      containers:
+      - name: score-app-container
+        # 🚨 요기가 핵심! 아까 테라폼으로 만든 ECR 창고 주소입니다.
+        image: 964993353199.dkr.ecr.ap-northeast-2.amazonaws.com/score-project-repo:latest
+        ports:
+        - containerPort: 80

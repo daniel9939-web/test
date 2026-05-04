@@ -1,0 +1,52 @@
+name: Score Project CI/CD Pipeline
+
+# 언제 로봇이 깨어날 것인가? (main 브랜치에 코드가 push 될 때!)
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    # 로봇에게 AWS 문지기를 통과할 권한(OIDC)을 부여합니다.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: 1. 조장님의 코드 가져오기
+      uses: actions/checkout@v3
+
+    - name: 2. AWS에 OIDC(임시 출입증)로 안전하게 로그인!
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        # 🚨 아까 테라폼(cicd.tf)으로 만들었던 그 완장(Role) 주소입니다!
+        role-to-assume: arn:aws:iam::964993353199:role/github-actions-role
+        aws-region: ap-northeast-2
+
+    - name: 3. AWS ECR(물류창고)에 로그인
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: 4. Docker 이미지 포장(Build)하고 창고에 넣기(Push)
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: score-project-repo  # 테라폼으로 만든 창고 이름
+        IMAGE_TAG: ${{ github.sha }}        # 깃허브 고유 번호를 이름표로 사용
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+    - name: 5. EKS 시청에 접근할 무전기(Kubeconfig) 세팅
+      run: |
+        # 🚨 테라폼으로 만든 EKS 클러스터의 실제 이름을 적어주세요! (예: test-cluster)
+        aws eks update-kubeconfig --region ap-northeast-2 --name score-cluster-tf
+
+    - name: 6. EKS에 최신 버전으로 배포 (Rolling Update) 명령!
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+        # 파드들이 새 이미지로 잘 갈아끼워지는지 확인
+        kubectl rollout restart deployment/score-app-deployment
