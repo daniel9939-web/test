@@ -1,8 +1,0 @@
-[02:48:37 2026-05-03] FETCHING Version 2.43.2
-[02:48:37 2026-05-03] DOWNLOADING https://github.com/spicetify/cli/releases/download/v2.43.2/spicetify-2.43.2-darwin-arm64.tar.gz
-[02:48:39 2026-05-03] EXTRACTING /Users/ihomin/.spicetify/spicetify.tar.gz
-[02:48:39 2026-05-03] SETTING EXECUTABLE PERMISSIONS TO /Users/ihomin/.spicetify/spicetify
-[02:48:39 2026-05-03] REMOVING /Users/ihomin/.spicetify/spicetify.tar.gz
-[02:48:39 2026-05-03] spicetify path already set in /Users/ihomin/.zshrc, continuing...
-[02:48:39 2026-05-03] spicetify v2.43.2 was installed successfully to /Users/ihomin/.spicetify
-[02:48:39 2026-05-03] Run 'spicetify --help' to get started
