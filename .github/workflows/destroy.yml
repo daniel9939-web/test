@@ -17,7 +17,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::[내계정번호]:role/[내_OIDC_역할이름]
+          role-to-assume: arn:aws:iam::964993353199:role/github-actions-role
           aws-region: ap-northeast-2
 
       - name: Setup Terraform

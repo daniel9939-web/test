@@ -4,12 +4,6 @@ terraform {
     key = "infra/terraform.tfstate"
     region = "ap-northeast-2"
   }
-}
-
-terraform {
-  backend "local" {
-    path = "./terraform.tfstate"
-  }
   required_providers {
     aws = {                 
       source  = "hashicorp/aws"
