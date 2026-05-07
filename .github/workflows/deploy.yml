@@ -4,12 +4,7 @@ name: Score Project CI/CD Pipeline
 on:
   push:
     branches: [ "main" ]
-    paths-ignore: 
-      - '**.tf'
-      - '.github/workflows/apply.yml'
-      - '.github/workflows/destroy.yml'
 
-  workflow_dispatch: :
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
