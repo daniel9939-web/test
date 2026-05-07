@@ -26,4 +26,19 @@ module "eks" {
 
   # 클러스터 생성자(조장님)에게 최고 관리자 권한 자동 부여
   enable_cluster_creator_admin_permissions = true
+
+  access_entries = {
+    github_actions = {
+      principal_arn = "arn:aws:iam::964993353199:role/github-actions-role"
+
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  }
 }
